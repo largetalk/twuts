@@ -12,7 +12,7 @@ from twisted.python import log
 from twisted.python.components import registerAdapter
 
 from twisted.web.server import Site, Request
-from twisted.internet import reactor
+from twisted.internet import reactor, ssl
 
 from zope.interface import implements
 
@@ -170,7 +170,7 @@ class Klein(object):
         return deco
 
 
-    def run(self, host, port, logFile=None):
+    def run(self, host, port, logFile=None, keyFile=None, certFile=None):
         """
         Run a minimal twisted.web server on the specified C{port}, bound to the
         interface specified by C{host} and logging to C{logFile}.
@@ -194,7 +194,12 @@ class Klein(object):
             logFile = sys.stdout
 
         log.startLogging(logFile)
-        reactor.listenTCP(port, Site(self.resource()), interface=host)
+        if keyFile and certFile:
+            sslContext = ssl.DefaultOpenSSLContextFactory(keyFile, certFile)
+            reactor.listenSSL(port, Site(self.resource()), interface=host, contextFactory=sslContext)
+        else:
+            reactor.listenTCP(port, Site(self.resource()), interface=host)
+
         reactor.run()
 
 
