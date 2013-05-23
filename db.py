@@ -13,3 +13,7 @@ def get_entrys():
     d = db.entry.find(limit=10)
     d.addCallback(callback)
     return d
+
+
+class ShortUrl(object):
+    pass
