@@ -13,7 +13,9 @@ from twisted.python import log
 
 def short_url(long_url):
     array = string.ascii_letters + string.digits
-    md5 = hashlib.md5().update(SALT_KEY + long_url).hexdigest()
+    m = hashlib.md5()
+    m.update(SALT_KEY + long_url)
+    md5 = m.hexdigest()
     short_url_lst = []
     for i in range(4):
         part_str = ''
