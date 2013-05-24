@@ -77,5 +77,3 @@ def get_google_long_url(short_url):
     d.addCallback(handle_response)
     return d
 
-
-
